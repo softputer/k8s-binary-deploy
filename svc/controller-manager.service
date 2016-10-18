@@ -1,0 +1,19 @@
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+Requires=apiserver.service
+After=apiserver.service
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart=/usr/bin/kube-controller-manager \
+		--master=http://${ETCD_MASTER}:8080 \
+                --leader-elect=true \
+                --service-cluster-ip-range=10.1.0.0/16 \
+		--logtostderr=true
+
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

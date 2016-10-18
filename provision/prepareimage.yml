@@ -1,0 +1,11 @@
+- name: Deploy pause_amd64
+  hosts: node
+#  sudo: True
+  become: true
+  become_user: root
+  tasks:
+  - name: copy pause.sh
+    copy: src=../scripts/pause.sh  dest=/etc/ mode=700
+
+  - name: exec pause.sh
+    command: sh /etc/pause.sh 

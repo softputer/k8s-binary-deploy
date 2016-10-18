@@ -1,0 +1,16 @@
+vagrant/.vagrant/*
+bin/etcd/etcd
+bin/etcd/etcdctl
+bin/flanneld/flanneld
+bin/kubernetes/kube-controller-manager
+bin/kubernetes/kubectl
+bin/kubernetes/kube-apiserver
+bin/kubernetes/kube-scheduler
+bin/kubernetes/kubelet
+bin/kubernetes/kube-proxy
+bin/openshift/oc
+bin/openshift/oadm
+bin/openshift/openshift
+*.retry
+.DS_Store
+

@@ -1,0 +1,17 @@
+- name: Deploy Kubernetes Master Component
+  hosts: master
+#  sudo: True
+  become: true
+  become_user: root
+  tasks:
+  - name: copy apiserver
+    copy: src=../bin/kubernetes/kube-apiserver  dest=/usr/bin mode=700
+
+  - name: copy kubetctl
+    copy: src=../bin/kubernetes/kubectl  dest=/usr/bin mode=700
+
+  - name: copy apiserver.yml
+    copy: src=../svc/apiserver.service  dest=/etc/systemd/system/apiserver.service
+
+  - name: start apiserver
+    systemd: name=apiserver enabled=yes daemon-reload=yes state=restarted 

@@ -1,0 +1,14 @@
+- name: Deploy Kubernetes Master Component
+  hosts: master
+#  sudo: True
+  become: true
+  become_user: root
+  tasks:
+  - name: copy scheduler
+    copy: src=../bin/kubernetes/kube-scheduler  dest=/usr/bin mode=700
+
+  - name: copy scheduler.yml
+    copy: src=../svc/scheduler.service  dest=/etc/systemd/system/scheduler.service
+
+  - name: start scheduler
+    systemd: name=scheduler enabled=yes daemon-reload=yes state=restarted

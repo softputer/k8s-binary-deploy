@@ -1,0 +1,56 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+members = {
+  # Name     num, CPU, RAM, IP_START 
+  'etcd' => [ 1, 2, 2048, 11 ],
+  'node' => [ 1, 2, 2048, 100 ],
+}
+
+PREFIX = "10.10.10"
+IP_RANGE = "10.11.0.0/16"
+ETCD_MASTER = "10.10.10.11"
+
+Vagrant.configure("2") do |config|
+  #define Linux Type
+  config.vm.box = "centos/7"
+
+  #all machines use the same key
+  config.ssh.insert_key = false
+  
+  #Variables
+  INITIAL_CLUSTER = Array.new(members['etcd'][0]) { |i| "%s-%02d=http://%s.%02d:2380" % ['etcd', i+1, PREFIX, members['etcd'][3]+i] } * ","
+  ETCD_SERVERS    = Array.new(members['etcd'][0]) { |i| "http://%s.%02d:2379"         % [PREFIX, members['etcd'][3]+i] }              * ","
+  API_SERVERS    = Array.new(members['etcd'][0]) { |i| "http://%s.%02d:8080"         % [PREFIX, members['etcd'][3]+i] }              * ","
+  KUBE_MASTER     = PREFIX + "." + members['etcd'][3].to_s
+
+  #Iterate memeber to set up predefined hosts
+  members.each do |name, (count, cpu, ram, ipstart)|
+    (1..count).each do |i|
+      config.vm.define member = "%s-%02d" % [name, i] do |m|
+        m.vm.hostname = member
+        config.vm.provider :virtualbox do |v|
+          v.name              = member
+          v.cpus              = cpu
+          v.memory            = ram
+          v.check_guest_additions = false
+          v.functional_vboxsf     = false
+        end
+        #Host IP
+        ip = "%s.%02d" % [PREFIX, ipstart+i-1]
+        m.vm.network :private_network, ip: ip
+        #m.vm.synced_folder "./bin", "/opt/bin", type: "rsync"
+
+        #add variables into files
+        m.vm.provision :shell, :inline => "echo HOST_NAME=#{member} >>/etc/environment", :privileged => true
+        m.vm.provision :shell, :inline => "echo LOCAL_IP=#{ip} >>/etc/environment", :privileged => true
+        m.vm.provision :shell, :inline => "echo INITIAL_CLUSTER=#{INITIAL_CLUSTER} >>/etc/environment", :privileged => true
+        m.vm.provision :shell, :inline => "echo ETCD_MASTER=#{ETCD_MASTER} >>/etc/environment", :privileged => true
+        m.vm.provision :shell, :inline => "echo ETCD_SERVERS=#{ETCD_SERVERS} >>/etc/environment", :privileged => true
+        m.vm.provision :shell, :inline => "echo API_SERVERS=#{API_SERVERS} >>/etc/environment", :privileged => true
+        m.vm.provision :shell, :inline => "echo FLANNEL_IP_RANGE=#{IP_RANGE} >>/etc/environment", :privileged => true
+        m.vm.provision :shell, :inline => "echo KUBE_MASTER=#{KUBE_MASTER}   >>/etc/environment", :privileged => true
+      end
+    end
+  end
+end

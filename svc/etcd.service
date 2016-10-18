@@ -1,0 +1,21 @@
+[Unit]
+Description=Etcd
+Documentation=https://github.com/coreos/etcd
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/usr/bin/etcd \
+                --name=${HOST_NAME} \
+                --listen-peer-urls=http://${LOCAL_IP}:2380 \
+                --listen-client-urls=http://${LOCAL_IP}:2379 \
+                --advertise-client-urls=http://${LOCAL_IP}:2379 \
+                --initial-advertise-peer-urls http://${LOCAL_IP}:2380 \
+                --initial-cluster ${INITIAL_CLUSTER} \
+		--data-dir=/var/lib/etcd
+Restart=always
+Type=notify
+LimitNOTILE=65536
+
+[Install]
+WantedBy=flanneld.target

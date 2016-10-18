@@ -1,0 +1,26 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=network.target
+After=etcd.service
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart=/usr/bin/kube-apiserver \
+                --allow-privileged=true \
+                --advertise-address=${LOCAL_IP} \
+		--etcd_servers=${ETCD_SERVERS} \
+		--insecure_bind_address=0.0.0.0 \
+		--logtostderr=true \
+		--service-cluster-ip-range=10.1.0.0/16 \
+                --service-node-port-range=30000-32767 \
+                --enable-swagger-ui=true \
+                --bind-address=0.0.0.0 \
+                --apiserver-count=3 \
+                
+Restart=always
+Type=notify
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

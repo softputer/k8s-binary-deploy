@@ -1,0 +1,15 @@
+- name: Deploy OpenShift
+  hosts: node
+#  sudo: True
+  become: true
+  become_user: root
+  tasks:
+  - name: copy openshift to node 
+    copy: src=../bin/openshift/openshift dest=/usr/bin mode=700
+
+  - name: copy oc to node 
+    copy: src=../bin/openshift/oc dest=/usr/bin mode=700
+
+  - name: copy oadm to node 
+    copy: src=../bin/openshift/oadm dest=/usr/bin mode=700
+

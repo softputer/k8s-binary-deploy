@@ -1,0 +1,13 @@
+- name: Deploy Flanneld
+  hosts: all
+  become: true
+  become_user: root
+  tasks:
+  - name: copy flanneld
+    copy: src=../bin/flanneld/flanneld dest=/usr/bin/ mode=700
+
+  - name: copy flanneld.service file
+    copy: src=../svc/flanneld.service dest=/etc/systemd/system/flanneld.service
+
+  - name: start flanneld
+    systemd: name=flanneld enabled=yes daemon-reload=yes state=restarted

@@ -1,0 +1,11 @@
+- name: Deploy ETCD
+  hosts: action
+#  sudo: True
+  become: true
+  become_user: root
+  tasks:
+  - name: copy script to set flannel subnet
+    copy: src=../scripts/flanneld.sh dest=/etc/ mode=700
+
+  - name: set network info for flanneld
+    command: sh /etc/flanneld.sh

@@ -1,0 +1,18 @@
+[Unit]
+Description=Fanneld
+Documentation=https://github.com/coreos/flannel
+After=network.target
+After=etcd.target
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart=/usr/bin/flanneld \
+		--etcd-endpoints=http://${ETCD_MASTER}:2379 \
+                --etcd-prefix=/coreos.com/network \
+                --iface=eth1
+Restart=always
+Type=notify
+LimitNOTILE=65536
+
+[Install]
+WantedBy=docker.target

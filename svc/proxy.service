@@ -1,0 +1,18 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=network.target
+After=etcd.service
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart=/usr/bin/kube-proxy \
+               --master=${API_SERVERS} \
+               --proxy-mode=iptables
+                
+Restart=always
+Type=notify
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

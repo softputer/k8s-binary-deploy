@@ -1,0 +1,14 @@
+- name: Deploy Docker to All 
+  hosts: all
+#  sudo: True
+  become: true
+  become_user: root
+  tasks:
+  - name: copy repo
+    copy: src=../configs/docker.repo dest=/etc/yum.repos.d/docker.repo
+
+  - name: install docker-engine
+    yum: name=docker-engine  update_cache=yes
+
+  - name: start docker
+    service: name=docker  state=restarted

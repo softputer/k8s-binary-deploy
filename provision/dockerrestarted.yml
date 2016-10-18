@@ -1,0 +1,23 @@
+- name: Configure Docker to use Flanneld
+  hosts: all
+#  sudo: True
+  become: true
+  become_user: root
+  tasks:
+  - name: copy docker.sh
+    copy: src=../scripts/docker.sh dest=/etc/ mode=700
+
+  - name: install ifconfig
+    yum: name=net-tools
+
+  - name: stop docker
+    systemd: name=docker state=stopped
+
+  - name: copy docker.service
+    copy: src=../svc/docker.service dest=/usr/lib/systemd/system/ 
+
+  - name: run docker.sh
+    command: sh /etc/docker.sh 
+
+  - name: start docker
+    systemd: name=docker enabled=yes daemon-reload=yes state=restarted

@@ -1,0 +1,17 @@
+- name: Deploy ETCD
+  hosts: master
+#  sudo: True
+  become: true
+  become_user: root
+  tasks:
+  - name: copy etcd
+    copy: src=../bin/etcd/etcd  dest=/usr/bin mode=700
+
+  - name: copy etcdctl
+    copy: src=../bin/etcd/etcdctl  dest=/usr/bin mode=700
+
+  - name: copy etcd.yml
+    copy: src=../svc/etcd.service  dest=/etc/systemd/system/etcd.service
+
+  - name: start etcd
+    systemd: name=etcd enabled=yes daemon-reload=yes state=restarted
