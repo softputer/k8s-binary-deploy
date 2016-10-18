@@ -8,7 +8,7 @@ After=etcd.service
 EnvironmentFile=/etc/environment
 ExecStart=/usr/bin/kube-proxy \
                --master=${API_SERVERS} \
-               --proxy-mode=iptables
+               --proxy-mode=userspace
                 
 Restart=always
 Type=notify
