@@ -7,6 +7,8 @@ After=etcd.service
 [Service]
 EnvironmentFile=/etc/environment
 ExecStart=/usr/bin/kubelet \
+                --cluster_dns=10.1.249.80 \
+                --cluster_domain=cluster.local \
                 --allow-privileged=true \
                 --container-runtime=docker \
                 --docker=unix:///var/run/docker.sock \
