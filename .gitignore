@@ -8,6 +8,7 @@ bin/kubernetes/kube-apiserver
 bin/kubernetes/kube-scheduler
 bin/kubernetes/kubelet
 bin/kubernetes/kube-proxy
+bin/kubernetes/kube-dns
 bin/openshift/oc
 bin/openshift/oadm
 bin/openshift/openshift

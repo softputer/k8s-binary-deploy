@@ -58,6 +58,7 @@ spec:
         # command = "/kube-dns"
         - --domain=cluster.local
         - --dns-port=10053
+        - --kube-master-url=http://10.10.10.11:8080
         ports:
         - containerPort: 10053
           name: dns-local

@@ -35,6 +35,7 @@ Vagrant.configure("2") do |config|
           v.memory            = ram
           v.check_guest_additions = false
           v.functional_vboxsf     = false
+          #v.customize ["modifyvm", :member, "--natdnshostresolver1", "on"]
         end
         #Host IP
         ip = "%s.%02d" % [PREFIX, ipstart+i-1]
@@ -50,6 +51,8 @@ Vagrant.configure("2") do |config|
         m.vm.provision :shell, :inline => "echo API_SERVERS=#{API_SERVERS} >>/etc/environment", :privileged => true
         m.vm.provision :shell, :inline => "echo FLANNEL_IP_RANGE=#{IP_RANGE} >>/etc/environment", :privileged => true
         m.vm.provision :shell, :inline => "echo KUBE_MASTER=#{KUBE_MASTER}   >>/etc/environment", :privileged => true
+        m.vm.provision :shell, :inline => "echo NODE_NUM=#{members['node'][0]}   >>/etc/environment", :privileged => true
+        
       end
     end
   end
