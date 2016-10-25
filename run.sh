@@ -11,4 +11,5 @@ ansible-playbook ./provision/scheduler.yml
 ansible-playbook ./provision/kubelet.yml
 ansible-playbook ./provision/proxy.yml
 ansible-playbook ./provision/prepareimage.yml
+ansible-playbook provision/openshift.yml
 kubectl --server=http://10.10.10.11:8080 create -f ./add-ons/dashboard/kubernetes-dashboard.yaml
