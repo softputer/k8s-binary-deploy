@@ -7,6 +7,12 @@
   - name: copy repo
     copy: src=../configs/docker.repo dest=/etc/yum.repos.d/docker.repo
 
+  - name: mkdir
+    file: path=/root/.docker state=directory
+
+  - name: copy config.json
+    copy: src=../configs/config.json dest=/root/.docker/config.json
+
   - name: install docker-engine
     yum: name=docker-engine  update_cache=yes
 
